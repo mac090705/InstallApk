@@ -1,4 +1,5 @@
 #! python3
+# -*- coding: utf-8 -*-
 
 import sys
 import os
@@ -67,11 +68,12 @@ def install(serial_number, apk_path):
 
 
 def launch(number, apk_path):
-    ret = os.popen('aapt dump badging %s' % apk_path).read()
-    info_list = re.split('\n', ret)
+    p = Popen(['aapt', 'dump', 'badging', apk_path], stdout=PIPE)
+    info_list = p.stdout.readlines()
     package = ''
     activity = ''
     for info in info_list:
+        info = str(info, 'utf-8').strip()
         if info.startswith('package'):
             package_array = re.split('\s', info)
             for item in package_array:
